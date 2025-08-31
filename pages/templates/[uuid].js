@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import TemplatesPage from '../../components/TemplatesPage';
+import toast from 'react-hot-toast';
 
 export default function ServicePage() {
   const router = useRouter();
