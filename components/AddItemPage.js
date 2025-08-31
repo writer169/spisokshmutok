@@ -232,4 +232,73 @@ export default function AddItemPage({ uuid, accessKey, onBack, onAddItems }) {
           >
             <FiArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-lg font-medium">Добавить вруч
+          <h1 className="text-lg font-medium">Добавить вручную</h1>
+        </div>
+
+        <div className="p-4">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-4">
+            {/* Название */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Название вещи *
+              </label>
+              <input
+                type="text"
+                value={itemName}
+                onChange={(e) => setItemName(e.target.value)}
+                placeholder="Введите название..."
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                autoFocus
+              />
+            </div>
+
+            {/* Категория */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Категория
+              </label>
+              <select
+                value={itemCategory}
+                onChange={(e) => setItemCategory(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                {CATEGORIES.map(category => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Статус */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Статус
+              </label>
+              <select
+                value={itemStatus}
+                onChange={(e) => setItemStatus(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value={STATUSES.BUY}>Купить</option>
+                <option value={STATUSES.THINK}>Подумать</option>
+                <option value={STATUSES.TAKEN}>Взял</option>
+              </select>
+            </div>
+
+            {/* Кнопка сохранения */}
+            <button
+              onClick={handleSaveManual}
+              disabled={!itemName.trim()}
+              className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Сохранить
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
