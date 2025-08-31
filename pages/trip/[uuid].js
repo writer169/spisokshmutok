@@ -163,6 +163,7 @@ export default function TripPage() {
         return (
           <MainPage
             items={items}
+            loading={loading} // <-- ДОБАВЛЕНО ЭТО СВОЙСТВО
             onOpenSubgroup={(subgroup) => {
               setCurrentSubgroup(subgroup);
               setCurrentPage('subgroup');
