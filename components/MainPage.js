@@ -158,4 +158,121 @@ export default function MainPage({ items, onOpenSubgroup, onOpenAdd, onUpdateIte
         </div>
         <div className="bg-white border border-gray-200 rounded-b-lg">
           {subgroupItems
-            .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a
+            .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+            .map(renderItem)}
+        </div>
+      </div>
+    );
+  };
+
+  const renderCategory = (category) => {
+    const categoryItems = getItemsByCategory(category);
+    if (categoryItems.length === 0) return null;
+
+    const isExpanded = expandedCategories[category];
+
+    return (
+      <div key={category} className="mb-4">
+        <button
+          onClick={() => toggleCategory(category)}
+          className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+        >
+          <span className="font-medium">{category}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">({categoryItems.length})</span>
+            {isExpanded ? <FiChevronDown /> : <FiChevronRight />}
+          </div>
+        </button>
+        
+        {isExpanded && (
+          <div className="mt-2 space-y-2">
+            {renderSubgroup(categoryItems, STATUSES.NEED, 'Нужно взять', SUBGROUP_COLORS[STATUSES.NEED])}
+            {renderSubgroup(categoryItems, STATUSES.BUY, 'Купить', SUBGROUP_COLORS[STATUSES.BUY])}
+            {renderSubgroup(categoryItems, STATUSES.THINK, 'Подумать', SUBGROUP_COLORS[STATUSES.THINK])}
+            {renderSubgroup(categoryItems, STATUSES.TAKEN, 'Взял', SUBGROUP_COLORS[STATUSES.TAKEN])}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Закрываем dropdown при клике вне его
+  useEffect(() => {
+    const handleClickOutside = () => setDropdownOpen(null);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Загрузка...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto p-4">
+      {/* Кнопки подгрупп */}
+      <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+        <button
+          onClick={() => onOpenSubgroup(STATUSES.BUY)}
+          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
+        >
+          <FiShoppingCart className="w-4 h-4" />
+          <span>Купить</span>
+          <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">
+            {getSubgroupCount(STATUSES.BUY)}
+          </span>
+        </button>
+        
+        <button
+          onClick={() => onOpenSubgroup(STATUSES.THINK)}
+          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
+        >
+          <FiHelpCircle className="w-4 h-4" />
+          <span>Подумать</span>
+          <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs">
+            {getSubgroupCount(STATUSES.THINK)}
+          </span>
+        </button>
+        
+        <button
+          onClick={() => onOpenSubgroup(STATUSES.TAKEN)}
+          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
+        >
+          <FiPackage className="w-4 h-4" />
+          <span>Взял</span>
+          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
+            {getSubgroupCount(STATUSES.TAKEN)}
+          </span>
+        </button>
+        
+        <button
+          onClick={onOpenAdd}
+          className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg ml-auto"
+        >
+          <FiPlus className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Счётчик */}
+      <div className="mb-6 text-lg font-medium">
+        Нужно взять: {getItemsToTakeCount()}
+      </div>
+
+      {/* Категории */}
+      <div className="space-y-4">
+        {CATEGORIES.map(renderCategory)}
+      </div>
+
+      {items.length === 0 && (
+        <div className="text-center py-12 text-gray-500">
+          <FiPackage className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+          <p>Список пуст</p>
+          <p className="text-sm">Нажмите "+" чтобы добавить вещи</p>
+        </div>
+      )}
+    </div>
+  );
+}
