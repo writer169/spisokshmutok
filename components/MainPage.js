@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiShoppingCart, FiHelpCircle, FiPackage, FiPlus, FiChevronDown, FiChevronRight, FiMoreVertical, FiCheck } from 'react-icons/fi';
 import { CATEGORIES, STATUSES, SUBGROUP_COLORS } from '../utils/constants';
 import toast from 'react-hot-toast';
