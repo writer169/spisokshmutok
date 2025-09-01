@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FiShoppingCart, FiHelpCircle, FiPackage, FiPlus, FiChevronDown, FiChevronRight, FiMoreVertical, FiCheck } from 'react-icons/fi';
 import { CATEGORIES, STATUSES, SUBGROUP_COLORS } from '../utils/constants';
 import toast from 'react-hot-toast';
@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, onUpdateItem, onDeleteItem }) {
   const [expandedCategories, setExpandedCategories] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const dropdownRef = useRef(null);
 
   const toggleCategory = (category) => {
     setExpandedCategories(prev => ({
@@ -68,6 +69,11 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
     ), { duration: Infinity });
   };
 
+  const handleDropdownToggle = (e, itemId) => {
+    e.stopPropagation();
+    setDropdownOpen(dropdownOpen === itemId ? null : itemId);
+  };
+
   const renderDropdownOptions = (item) => {
     const currentStatus = item.status || STATUSES.NEED;
     
@@ -118,9 +124,9 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
           </span>
         </div>
         
-        <div className="relative">
+        <div className="relative" ref={dropdownOpen === item.id ? dropdownRef : null}>
           <button
-            onClick={() => setDropdownOpen(dropdownOpen === item.id ? null : item.id)}
+            onClick={(e) => handleDropdownToggle(e, item.id)}
             className="p-1 hover:bg-gray-200 rounded"
           >
             <FiMoreVertical className="w-4 h-4" />
@@ -131,7 +137,10 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
               {renderDropdownOptions(item).map((option, idx) => (
                 <button
                   key={idx}
-                  onClick={option.action}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    option.action();
+                  }}
                   className={`block w-full text-left px-4 py-2 hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg ${
                     option.danger ? 'text-red-600' : ''
                   }`}
@@ -198,10 +207,17 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
 
   // Закрываем dropdown при клике вне его
   useEffect(() => {
-    const handleClickOutside = () => setDropdownOpen(null);
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(null);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [dropdownOpen]);
 
   if (loading) {
     return (
