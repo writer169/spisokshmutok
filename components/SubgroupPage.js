@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { FiArrowLeft, FiCopy, FiMoreVertical, FiCheck, FiPackage } from 'react-icons/fi';
+import { useState, useEffect, useRef } from 'react';
+import { FiArrowLeft, FiCopy, FiMoreVertical, FiCheck, FiBriefcase } from 'react-icons/fi';
 import { CATEGORIES, STATUSES } from '../utils/constants';
 import toast from 'react-hot-toast';
 
 export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, onDeleteItem }) {
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const dropdownRef = useRef(null);
 
   const getFilteredItems = () => {
     return items
@@ -85,6 +86,11 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
     ), { duration: Infinity });
   };
 
+  const handleDropdownToggle = (e, itemId) => {
+    e.stopPropagation();
+    setDropdownOpen(dropdownOpen === itemId ? null : itemId);
+  };
+
   const renderDropdownOptions = (item) => {
     const currentStatus = item.status || STATUSES.NEED;
     
@@ -112,10 +118,17 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
 
   // Закрываем dropdown при клике вне его
   useEffect(() => {
-    const handleClickOutside = () => setDropdownOpen(null);
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(null);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [dropdownOpen]);
 
   const filteredItems = getFilteredItems();
 
@@ -146,7 +159,7 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
       <div className="bg-white">
         {filteredItems.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            <FiPackage className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+            <FiBriefcase className="w-12 h-12 mx-auto mb-4 text-gray-300" />
             <p>Список пуст</p>
           </div>
         ) : (
@@ -158,7 +171,7 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
                     onClick={() => handleCheckboxChange(item.id)}
                     className="mr-3 w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center hover:border-green-500 transition-colors"
                   >
-                    <FiPackage className="w-4 h-4 text-gray-400" />
+                    <FiBriefcase className="w-4 h-4 text-gray-400" />
                   </button>
                 )}
                 {subgroup === STATUSES.TAKEN && (
@@ -174,12 +187,9 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
                 </div>
               </div>
               
-              <div className="relative">
+              <div className="relative" ref={dropdownOpen === item.id ? dropdownRef : null}>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDropdownOpen(dropdownOpen === item.id ? null : item.id);
-                  }}
+                  onClick={(e) => handleDropdownToggle(e, item.id)}
                   className="p-1 hover:bg-gray-200 rounded"
                 >
                   <FiMoreVertical className="w-4 h-4" />
@@ -190,7 +200,10 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
                     {renderDropdownOptions(item).map((option, idx) => (
                       <button
                         key={idx}
-                        onClick={option.action}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          option.action();
+                        }}
                         className={`block w-full text-left px-4 py-2 hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg ${
                           option.danger ? 'text-red-600' : ''
                         }`}

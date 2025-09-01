@@ -7,12 +7,12 @@ export default function AddItemPage({ uuid, accessKey, onBack, onAddItems }) {
   const [mode, setMode] = useState(null); // 'list' или 'manual'
   const [templates, setTemplates] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState(STATUSES.BUY);
+  const [selectedStatus, setSelectedStatus] = useState(STATUSES.NEED);
   
   // Для ручного добавления
   const [itemName, setItemName] = useState('');
   const [itemCategory, setItemCategory] = useState('Прочее');
-  const [itemStatus, setItemStatus] = useState(STATUSES.BUY);
+  const [itemStatus, setItemStatus] = useState(STATUSES.NEED);
   
   const [loading, setLoading] = useState(false);
 
@@ -168,6 +168,7 @@ export default function AddItemPage({ uuid, accessKey, onBack, onAddItems }) {
                 onChange={(e) => setSelectedStatus(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg"
               >
+                <option value={STATUSES.NEED}>Нужно взять</option>
                 <option value={STATUSES.BUY}>Купить</option>
                 <option value={STATUSES.THINK}>Подумать</option>
                 <option value={STATUSES.TAKEN}>Взял</option>
@@ -280,6 +281,7 @@ export default function AddItemPage({ uuid, accessKey, onBack, onAddItems }) {
                 onChange={(e) => setItemStatus(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
+                <option value={STATUSES.NEED}>Нужно взять</option>
                 <option value={STATUSES.BUY}>Купить</option>
                 <option value={STATUSES.THINK}>Подумать</option>
                 <option value={STATUSES.TAKEN}>Взял</option>
