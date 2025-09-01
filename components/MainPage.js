@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiShoppingCart, FiHelpCircle, FiSuitcase, FiPlus, FiChevronDown, FiChevronRight, FiMoreVertical, FiCheck } from 'react-icons/fi';
+import { FiShoppingCart, FiHelpCircle, FiBriefcase, FiPlus, FiChevronDown, FiChevronRight, FiMoreVertical, FiCheck } from 'react-icons/fi';
 import { CATEGORIES, STATUSES, SUBGROUP_COLORS } from '../utils/constants';
 import toast from 'react-hot-toast';
 
@@ -111,7 +111,7 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
               onClick={() => handleCheckboxChange(item.id)}
               className="mr-3 w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center hover:border-green-500 transition-colors"
             >
-              <FiSuitcase className="w-4 h-4 text-gray-400" />
+              <FiBriefcase className="w-4 h-4 text-gray-400" />
             </button>
           )}
           {currentStatus === STATUSES.TAKEN && (
@@ -255,7 +255,7 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
           onClick={() => onOpenSubgroup(STATUSES.TAKEN)}
           className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
         >
-          <FiSuitcase className="w-4 h-4" />
+          <FiBriefcase className="w-4 h-4" />
           <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
             {getSubgroupCount(STATUSES.TAKEN)}
           </span>
@@ -281,7 +281,7 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
 
       {items.length === 0 && (
         <div className="text-center py-12 text-gray-500">
-          <FiSuitcase className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+          <FiBriefcase className="w-12 h-12 mx-auto mb-4 text-gray-300" />
           <p>Список пуст</p>
           <p className="text-sm">Нажмите "+" чтобы добавить вещи</p>
         </div>
