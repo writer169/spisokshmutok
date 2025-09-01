@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiArrowLeft, FiCopy, FiMoreVertical, FiCheck, FiSuitcase } from 'react-icons/fi';
+import { FiArrowLeft, FiCopy, FiMoreVertical, FiCheck, FiBriefcase } from 'react-icons/fi';
 import { CATEGORIES, STATUSES } from '../utils/constants';
 import toast from 'react-hot-toast';
 
@@ -159,7 +159,7 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
       <div className="bg-white">
         {filteredItems.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            <FiSuitcase className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+            <FiBriefcase className="w-12 h-12 mx-auto mb-4 text-gray-300" />
             <p>Список пуст</p>
           </div>
         ) : (
@@ -171,7 +171,7 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
                     onClick={() => handleCheckboxChange(item.id)}
                     className="mr-3 w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center hover:border-green-500 transition-colors"
                   >
-                    <FiSuitcase className="w-4 h-4 text-gray-400" />
+                    <FiBriefcase className="w-4 h-4 text-gray-400" />
                   </button>
                 )}
                 {subgroup === STATUSES.TAKEN && (
