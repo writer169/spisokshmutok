@@ -6,6 +6,8 @@ import toast from 'react-hot-toast';
 export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, onUpdateItem, onDeleteItem }) {
   const [expandedCategories, setExpandedCategories] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [editingItem, setEditingItem] = useState(null);
+  const [editingName, setEditingName] = useState('');
   const dropdownRef = useRef(null);
 
   const toggleCategory = (category) => {
@@ -74,6 +76,33 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
     setDropdownOpen(dropdownOpen === itemId ? null : itemId);
   };
 
+  const handleStartEditing = (item) => {
+    setEditingItem(item.id);
+    setEditingName(item.name);
+  };
+
+  const handleSaveEdit = async (itemId) => {
+    if (editingName.trim() && editingName.trim() !== items.find(item => item.id === itemId)?.name) {
+      await onUpdateItem(itemId, { name: editingName.trim() });
+      toast.success('Название изменено');
+    }
+    setEditingItem(null);
+    setEditingName('');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingItem(null);
+    setEditingName('');
+  };
+
+  const handleKeyPress = (e, itemId) => {
+    if (e.key === 'Enter') {
+      handleSaveEdit(itemId);
+    } else if (e.key === 'Escape') {
+      handleCancelEdit();
+    }
+  };
+
   const renderDropdownOptions = (item) => {
     const currentStatus = item.status || STATUSES.NEED;
     
@@ -119,8 +148,26 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
               <FiCheck className="w-4 h-4 text-white" />
             </div>
           )}
-          <span className={`${currentStatus === STATUSES.TAKEN ? 'line-through text-gray-500' : ''}`}>
-            {item.name}
+          <span className={`flex-1 ${currentStatus === STATUSES.TAKEN ? 'line-through text-gray-500' : ''}`}>
+            {editingItem === item.id ? (
+              <input
+                type="text"
+                value={editingName}
+                onChange={(e) => setEditingName(e.target.value)}
+                onBlur={() => handleSaveEdit(item.id)}
+                onKeyDown={(e) => handleKeyPress(e, item.id)}
+                className="w-full bg-transparent border-none outline-none focus:bg-white focus:border focus:border-blue-500 focus:rounded px-1"
+                autoFocus
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <span 
+                onClick={() => handleStartEditing(item)}
+                className="cursor-pointer hover:bg-gray-100 px-1 py-1 rounded transition-colors"
+              >
+                {item.name}
+              </span>
+            )}
           </span>
         </div>
         
