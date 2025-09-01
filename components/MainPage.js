@@ -3,7 +3,7 @@ import { FiShoppingCart, FiHelpCircle, FiPackage, FiPlus, FiChevronDown, FiChevr
 import { CATEGORIES, STATUSES, SUBGROUP_COLORS } from '../utils/constants';
 import toast from 'react-hot-toast';
 
-export default function MainPage({ items, onOpenSubgroup, onOpenAdd, onUpdateItem, onDeleteItem }) {
+export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, onUpdateItem, onDeleteItem }) {
   const [expandedCategories, setExpandedCategories] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(null);
 
