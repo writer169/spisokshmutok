@@ -69,11 +69,13 @@ export default async function handler(req, res) {
       case 'PUT':
         const { itemId, updates } = req.body;
         
+        // Обновляем вещь с любыми переданными полями
         await db.collection('trips').updateOne(
           { tripId: uuid, key: key, 'items.id': itemId },
           { 
             $set: { 
               'items.$.status': updates.status,
+              'items.$.name': updates.name,  // Добавленная строка
               'items.$.updatedAt': new Date(),
               updatedAt: new Date()
             }
