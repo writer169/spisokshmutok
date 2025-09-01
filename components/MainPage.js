@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiShoppingCart, FiHelpCircle, FiPackage, FiPlus, FiChevronDown, FiChevronRight, FiMoreVertical, FiCheck } from 'react-icons/fi';
+import { FiShoppingCart, FiHelpCircle, FiSuitcase, FiPlus, FiChevronDown, FiChevronRight, FiMoreVertical, FiCheck } from 'react-icons/fi';
 import { CATEGORIES, STATUSES, SUBGROUP_COLORS } from '../utils/constants';
 import toast from 'react-hot-toast';
 
@@ -111,7 +111,7 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
               onClick={() => handleCheckboxChange(item.id)}
               className="mr-3 w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center hover:border-green-500 transition-colors"
             >
-              <FiPackage className="w-4 h-4 text-gray-400" />
+              <FiSuitcase className="w-4 h-4 text-gray-400" />
             </button>
           )}
           {currentStatus === STATUSES.TAKEN && (
@@ -233,10 +233,9 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
       <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
         <button
           onClick={() => onOpenSubgroup(STATUSES.BUY)}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
+          className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
         >
           <FiShoppingCart className="w-4 h-4" />
-          <span>Купить</span>
           <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">
             {getSubgroupCount(STATUSES.BUY)}
           </span>
@@ -244,10 +243,9 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
         
         <button
           onClick={() => onOpenSubgroup(STATUSES.THINK)}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
+          className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
         >
           <FiHelpCircle className="w-4 h-4" />
-          <span>Подумать</span>
           <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs">
             {getSubgroupCount(STATUSES.THINK)}
           </span>
@@ -255,10 +253,9 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
         
         <button
           onClick={() => onOpenSubgroup(STATUSES.TAKEN)}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
+          className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 whitespace-nowrap"
         >
-          <FiPackage className="w-4 h-4" />
-          <span>Взял</span>
+          <FiSuitcase className="w-4 h-4" />
           <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
             {getSubgroupCount(STATUSES.TAKEN)}
           </span>
@@ -266,7 +263,7 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
         
         <button
           onClick={onOpenAdd}
-          className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg ml-auto"
+          className="flex items-center gap-2 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg ml-auto"
         >
           <FiPlus className="w-4 h-4" />
         </button>
@@ -284,7 +281,7 @@ export default function MainPage({ items, loading, onOpenSubgroup, onOpenAdd, on
 
       {items.length === 0 && (
         <div className="text-center py-12 text-gray-500">
-          <FiPackage className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+          <FiSuitcase className="w-12 h-12 mx-auto mb-4 text-gray-300" />
           <p>Список пуст</p>
           <p className="text-sm">Нажмите "+" чтобы добавить вещи</p>
         </div>
