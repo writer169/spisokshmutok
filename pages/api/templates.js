@@ -1,4 +1,5 @@
 import clientPromise from '../../lib/mongodb';
+import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
   try {
@@ -19,11 +20,15 @@ export default async function handler(req, res) {
 
         // Добавляем новые шаблоны (избегаем дубликатов по имени)
         for (const item of items) {
+          if (!item.name || typeof item.name !== 'string' || !item.name.trim()) {
+            continue; // Пропускаем элементы без имени
+          }
+          
           await db.collection('templates').updateOne(
-            { name: item.name },
+            { name: item.name.trim() },
             { 
               $set: { 
-                name: item.name,
+                name: item.name.trim(),
                 category: item.category || 'Прочее'
               }
             },
@@ -36,9 +41,13 @@ export default async function handler(req, res) {
       case 'PUT':
         const { _id, name, category } = req.body;
         
+        if (!_id || !name || typeof name !== 'string' || !name.trim()) {
+          return res.status(400).json({ error: 'Некорректные данные' });
+        }
+        
         await db.collection('templates').updateOne(
           { _id: new ObjectId(_id) },
-          { $set: { name, category } }
+          { $set: { name: name.trim(), category: category || 'Прочее' } }
         );
 
         return res.status(200).json({ success: true });
@@ -46,14 +55,11 @@ export default async function handler(req, res) {
       case 'DELETE':
         if (req.body.deleteAll) {
           await db.collection('templates').deleteMany({});
-        } else if (req.body.ids) {
-          const { ObjectId } = require('mongodb');
+        } else if (req.body.ids && Array.isArray(req.body.ids)) {
           const objectIds = req.body.ids.map(id => new ObjectId(id));
           await db.collection('templates').deleteMany({ _id: { $in: objectIds } });
-        } else {
-          const { _id } = req.body;
-          const { ObjectId } = require('mongodb');
-          await db.collection('templates').deleteOne({ _id: new ObjectId(_id) });
+        } else if (req.body._id) {
+          await db.collection('templates').deleteOne({ _id: new ObjectId(req.body._id) });
         }
 
         return res.status(200).json({ success: true });
