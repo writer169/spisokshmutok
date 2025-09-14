@@ -69,17 +69,26 @@ export default async function handler(req, res) {
       case 'PUT':
         const { itemId, updates } = req.body;
         
-        // Обновляем вещь с любыми переданными полями
+        // Создаем объект обновлений динамически
+        const setUpdate = {
+          'items.$.updatedAt': new Date(),
+          updatedAt: new Date()
+        };
+
+        // Добавляем только переданные поля
+        if (updates.hasOwnProperty('status')) {
+          setUpdate['items.$.status'] = updates.status;
+        }
+        if (updates.hasOwnProperty('name')) {
+          setUpdate['items.$.name'] = updates.name;
+        }
+        if (updates.hasOwnProperty('category')) {
+          setUpdate['items.$.category'] = updates.category;
+        }
+
         await db.collection('trips').updateOne(
           { tripId: uuid, key: key, 'items.id': itemId },
-          { 
-            $set: { 
-              'items.$.status': updates.status,
-              'items.$.name': updates.name,  // Добавленная строка
-              'items.$.updatedAt': new Date(),
-              updatedAt: new Date()
-            }
-          }
+          { $set: setUpdate }
         );
 
         return res.status(200).json({ success: true });
