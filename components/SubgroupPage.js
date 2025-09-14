@@ -217,7 +217,7 @@ export default function SubgroupPage({ items, subgroup, onBack, onUpdateItem, on
                         onChange={(e) => setEditingName(e.target.value)}
                         onBlur={() => handleSaveEdit(item.id)}
                         onKeyDown={(e) => handleKeyPress(e, item.id)}
-                        className="w-full bg-transparent border-none outline-none focus:bg-white focus:border focus:border-blue-500 focus:rounded px-1"
+                        className="w-full bg-white border border-gray-300 outline-none focus:border-blue-500 focus:rounded px-2 py-1 rounded text-gray-900"
                         autoFocus
                         onClick={(e) => e.stopPropagation()}
                       />
